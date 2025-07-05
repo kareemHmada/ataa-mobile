@@ -56,6 +56,7 @@ export default function LoginScreen() {
           flexDirection: "row-reverse",
           justifyContent: "space-between",
           paddingTop: 50,
+          backgroundColor: "#fff"
         }}
       >
         <Pressable
@@ -75,7 +76,6 @@ export default function LoginScreen() {
         <View style={styles.formContainer}>
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={styles.container}
             keyboardVerticalOffset={90}
           >
             <TextInput
