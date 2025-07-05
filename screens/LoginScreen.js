@@ -12,7 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import api from "../api/api"; 
+import api from "../api/api";
 import ButSo from "../components/ui/ButSo";
 import BackBtu from "../components/ui/BackBut";
 
@@ -32,7 +32,6 @@ export default function LoginScreen() {
       await AsyncStorage.setItem("token", token);
       await AsyncStorage.setItem("user", JSON.stringify(user));
 
-      
       if (user.role === "org") {
         navigation.navigate("DrawerNavigationN");
       } else if (user.role === "donor" || user.role === "receiver") {
@@ -42,7 +41,6 @@ export default function LoginScreen() {
       }
 
       Alert.alert("تم تسجيل الدخول");
-
     } catch (error) {
       console.log(error.response?.data || error.message);
       Alert.alert("خطأ", "تأكد من البريد وكلمة المرور");
@@ -56,7 +54,7 @@ export default function LoginScreen() {
           flexDirection: "row-reverse",
           justifyContent: "space-between",
           paddingTop: 50,
-          backgroundColor: "#fff"
+          backgroundColor: "#fff",
         }}
       >
         <Pressable
