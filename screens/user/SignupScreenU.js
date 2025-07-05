@@ -61,14 +61,8 @@ export default function SignupScreenU() {
       }
 
     } catch (error) {
-      // console.log("Signup error:", error.response?.data || error.message);
-      // Alert.alert("Error", "Something went wrong during signup.");
-      navigation.navigate("LoginScreen");
-      setName("");
-      setEmail("");
-      setPassword("");
-      setPasswordConfirm("");
-
+      console.log("Signup error:", error.response?.data || error.message);
+      Alert.alert("Error", "Something went wrong during signup.");
     }
   };
 

@@ -70,14 +70,8 @@ export default function SignupScreenN() {
 
     } catch (error) {
       console.log("Signup error:", error.response?.data || error.message);
-      // Alert.alert("Error", "Something went wrong during signup.");
-      navigation.navigate("LoginScreen");
-      setName("");
-      setEmail("");
-      setPassword("");
-      setPasswordConfirm("");
-      setInstitution("");
-      setLicense("");
+      Alert.alert("Error", "Something went wrong during signup.");
+
     }
   };
 
