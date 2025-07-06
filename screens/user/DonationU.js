@@ -17,7 +17,7 @@ export default function DonationU({ navigation }) {
   useEffect(() => {
     const focusListener = navigation.addListener("focus", async () => {
       try {
-        const res = await api.get("/donations");
+        const res = await api.get("/auth/donations");
         setDonations(res.data);
       } catch (error) {
         console.log("Error loading donations:", error.response?.data || error.message);

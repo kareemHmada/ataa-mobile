@@ -24,15 +24,17 @@ export default function DashboardU() {
     const fetchDashboardData = async () => {
       try {
         // API
-        const res = await api.get("/dashboard");   
+        const res = await api.get("/auth/dashboard");   
         setStats(res.data.stats);
-        setDonations(res.data.donations); 
 
-        const completed = all.filter((d) => d.status === "مكتمل").length;
-        const inProgress = all.filter((d) => d.status !== "مكتمل").length;
+        const donationsData = res.data.donations || res.data.recent_donations || [];
+        setDonations(donationsData);
+
+        const completed = donationsData.filter((d) => d.status === "مكتمل").length;
+        const inProgress = donationsData.filter((d) => d.status !== "مكتمل").length;
 
         setStats({
-          total: all.length,
+          total: donationsData.length,
           completed,
           inProgress,
         });

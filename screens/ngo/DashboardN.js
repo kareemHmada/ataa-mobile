@@ -11,7 +11,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import SmallCard from "../../components/ui/SmallCard";
 
 export default function DashboardN() {
-  const [stats, setStats] = useState(null);
+  const [stats, setStats] = useState({
+    total: 0,
+    messages: 0,
+    accepted: 0,
+    pending: 0,
+  });
   const [recent, setRecent] = useState([]);
   const [loading, setLoading] = useState(true);
 

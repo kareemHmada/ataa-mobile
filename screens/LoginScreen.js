@@ -32,6 +32,9 @@ export default function LoginScreen() {
       await AsyncStorage.setItem("token", token);
       await AsyncStorage.setItem("user", JSON.stringify(user));
 
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+
       if (user.role === "org") {
         navigation.navigate("DrawerNavigationN");
       } else if (user.role === "donor" || user.role === "receiver") {
