@@ -22,7 +22,7 @@ export default function DashboardN() {
 
   const fetchDashboardData = async () => {
     try {
-      const res = await api.get("/dashboard"); //API
+      const res = await api.get("/api/auth/dashboard"); //API
       setStats(res.data.status);
       setRecent(res.data.recent_donations);
     } catch (error) {

@@ -20,7 +20,7 @@ export default function Home() {
 
   const fetchStats = async () => {
     try {
-      const res = await api.get("/home-stats");
+      const res = await api.get("/api/home-stats");
       setStats(res.data);
     } catch (error) {
       console.log("Error fetching stats:", error);

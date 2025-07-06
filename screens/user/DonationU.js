@@ -1,4 +1,4 @@
-import { ScrollView, View, TextInput, StyleSheet } from "react-native";
+import { ScrollView, View, TextInput, StyleSheet, Image } from "react-native";
 import { useState, useEffect } from "react";
 import MedicalEquipmentCard from "../../components/ui/MedicalEquipmentCard";
 import api from "../../api/api";
@@ -17,7 +17,7 @@ export default function DonationU({ navigation }) {
   useEffect(() => {
     const focusListener = navigation.addListener("focus", async () => {
       try {
-        const res = await api.get("/auth/donations");
+        const res = await api.get("/api/auth/donations");
         setDonations(res.data);
       } catch (error) {
         console.log("Error loading donations:", error.response?.data || error.message);
@@ -27,6 +27,8 @@ export default function DonationU({ navigation }) {
     return focusListener;
   }, [navigation]);
 
+
+  console.log(donations);
   return (
     <View style={styles.container}>
       <View style={styles.searchContainer}>
@@ -46,9 +48,14 @@ export default function DonationU({ navigation }) {
             category={item.category}
             status={item.status}
             description={item.description}
-            imageUrl={`http://YOUR_IP:8000/storage/${item.img}`}
+            imageUrl={item.img}
           />
-        ))}
+          
+        ))
+        
+        
+      }    
+        {/* <Image source={{uri:`http://localhost/ataa-api/storage/app/public/686a663725604.png`}} style={{width: 200, height: 200, alignSelf: 'center'}}/> */}
       </ScrollView>
     </View>
   );

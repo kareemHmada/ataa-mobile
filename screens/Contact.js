@@ -30,7 +30,7 @@ export default function Contact() {
     }
 
     try {
-      const res = await api.post("/contact", {
+      const res = await api.post("/api/contact", {
         name,
         email,
         subject,

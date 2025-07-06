@@ -24,7 +24,7 @@ export default function DashboardU() {
     const fetchDashboardData = async () => {
       try {
         // API
-        const res = await api.get("/auth/dashboard");   
+        const res = await api.get("/api/auth/dashboard");   
         setStats(res.data.status);
 
         const donationsData = res.data.donations || [];

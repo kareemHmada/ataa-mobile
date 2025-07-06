@@ -104,7 +104,7 @@ export default function NewDonationU({ navigation }) {
         });
       }
 
-      await api.post("/auth/donations", form, {
+      await api.post("/api/auth/donations", form, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

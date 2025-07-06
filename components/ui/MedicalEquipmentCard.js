@@ -1,4 +1,7 @@
 import { View, Text, Pressable, StyleSheet, Image } from "react-native";
+import api from "../../api/api"; // api.js
+
+
 
 export default function MedicalEquipmentCard({
   title,
@@ -42,7 +45,7 @@ export default function MedicalEquipmentCard({
       {imageUrl && (
         <View style={styles.imageContainer}>
           <Image
-            source={{ uri: imageUrl }}
+            source={{ uri: `${api.defaults.baseURL}/storage/${imageUrl}` }}
             style={styles.cardImage}
             resizeMode="cover"
           />

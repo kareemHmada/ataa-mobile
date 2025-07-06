@@ -77,7 +77,7 @@ export default function NewRequestN({ navigation }) {
 
       form.append("image", formData.images);
 
-      await api.post("/auth/donation-requests", form, {
+      await api.post("/api/auth/donation-requests", form, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
