@@ -9,20 +9,43 @@ import {
   Image,
   Alert,
 } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 
 import * as ImagePicker from "expo-image-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import api from "../../api/api";
+
+
+const requestTypes = [
+  { label: "Select donation type", value: "" },
+  { label: "Clothes", value: "Clothes" },
+  { label: "Furniture", value: "Furniture" },
+  { label: "Electronics", value: "Electronics" },
+  { label: "Books", value: "Books" },
+  { label: "Toys", value: "Toys" },
+  { label: "Other", value: "Other" },
+];
+
+const conditions = [
+  { label: "Select condition", value: "" },
+  { label: "New", value: "New" },
+  { label: "Like New", value: "Like New" },
+  { label: "Good", value: "Good" },
+  { label: "Acceptable", value: "Acceptable" },
+];
 
 export default function NewDonationU({ navigation }) {
   const [formData, setFormData] = useState({
     title: "",
     date: new Date().toISOString().split("T")[0],
     imageUrl: "",
-    statusa: "Waiting",
+    status: "Waiting",
     description: "",
     category: "",
     location: "",
+    type: "",
+    quantity: "",
+    condition: "",
   });
 
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -62,8 +85,12 @@ export default function NewDonationU({ navigation }) {
       form.append("date", formData.date);
       form.append("description", formData.description);
       form.append("category", formData.category);
-      form.append("statua", formData.statusa); // Laravel uses statua
+      form.append("status", formData.status);
       form.append("location", formData.location || "");
+      form.append("type", formData.type);
+      form.append("quantity", formData.quantity);
+      form.append("condition", formData.condition);
+      form.append("image", formData.imageUrl);
 
       if (tempImage) {
         const filename = tempImage.split("/").pop();
@@ -77,7 +104,7 @@ export default function NewDonationU({ navigation }) {
         });
       }
 
-      await api.post("/donations", form, {
+      await api.post("/auth/donations", form, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -104,6 +131,39 @@ export default function NewDonationU({ navigation }) {
         value={formData.title}
         onChangeText={(text) => setFormData({ ...formData, title: text })}
       />
+              <Text style={styles.label}>Donation Type*</Text>
+        <View style={styles.pickerContainer}>
+          <Picker
+            selectedValue={formData.type}
+            onValueChange={(value) => setFormData({ ...formData, type: value })}
+          >
+            {requestTypes.map((item) => (
+              <Picker.Item key={item.value} label={item.label} value={item.value} />
+            ))}
+          </Picker>
+        </View>
+
+        <Text style={styles.label}>Quantity</Text>
+        <TextInput
+          style={styles.input}
+          value={formData.quantity}
+          onChangeText={(text) => setFormData({ ...formData, quantity: text })}
+          keyboardType="numeric"
+        />
+
+        <Text style={styles.label}>Condition*</Text>
+        <View style={styles.pickerContainer}>
+          <Picker
+            selectedValue={formData.condition}
+            onValueChange={(value) =>
+              setFormData({ ...formData, condition: value })
+            }
+          >
+            {conditions.map((item) => (
+              <Picker.Item key={item.value} label={item.label} value={item.value} />
+            ))}
+          </Picker>
+        </View>
 
       <Text style={styles.label}>Date</Text>
       <Pressable style={styles.input} onPress={() => setShowDatePicker(true)}>
@@ -126,7 +186,7 @@ export default function NewDonationU({ navigation }) {
         onChangeText={(text) => setFormData({ ...formData, category: text })}
       />
 
-      <Text style={styles.label}>Description</Text>
+      <Text style={styles.label}>Description*</Text>
       <TextInput
         style={[styles.input, styles.multilineInput]}
         placeholder="Enter detailed description"
@@ -168,7 +228,7 @@ export default function NewDonationU({ navigation }) {
               title: "",
               date: new Date().toISOString().split("T")[0],
               imageUrl: "",
-              statusa: "Waiting",
+              status: "Waiting",
               description: "",
               category: "",
               location: "",
@@ -281,5 +341,12 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
     fontSize: 16,
+  },
+  pickerContainer: {
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 5,
+    marginBottom: 15,
+    overflow: "hidden",
   },
 });

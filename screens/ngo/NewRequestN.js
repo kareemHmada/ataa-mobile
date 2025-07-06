@@ -39,7 +39,7 @@ export default function NewRequestN({ navigation }) {
     quantity: "",
     condition: "",
     description: "",
-    images: [],
+    images: "",
     location: "",
     notes: "",
   });
@@ -54,10 +54,7 @@ export default function NewRequestN({ navigation }) {
     if (!result.canceled) {
       setFormData({
         ...formData,
-        images: [
-          ...formData.images,
-          ...result.assets.map((asset) => asset.uri),
-        ],
+        images: result.assets[0].uri,
       });
     }
   };
@@ -78,17 +75,9 @@ export default function NewRequestN({ navigation }) {
       form.append("location", formData.location || "");
       form.append("notes", formData.notes || "");
 
-      formData.images.forEach((uri, index) => {
-        const filename = uri.split("/").pop();
-        const ext = filename.split(".").pop();
-        form.append(`images[${index}]`, {
-          uri,
-          name: filename,
-          type: `image/${ext}`,
-        });
-      });
+      form.append("image", formData.images);
 
-      await api.post("/donation-requests", form, {
+      await api.post("/auth/donation-requests", form, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -159,15 +148,12 @@ export default function NewRequestN({ navigation }) {
         <Pressable style={styles.imageUpload} onPress={pickImage}>
           <Text style={styles.imageUploadText}>+ Add Images</Text>
           <Text style={styles.imageHint}>PNG, JPG up to 10MB</Text>
-          {formData.images.length > 0 && (
+          {formData.images && (
             <View style={styles.imagePreviewContainer}>
-              {formData.images.map((uri, index) => (
-                <Image
-                  key={index}
-                  source={{ uri }}
+              <Image
+                  source={{ uri: formData.images }}
                   style={styles.imagePreview}
                 />
-              ))}
             </View>
           )}
         </Pressable>
@@ -196,7 +182,7 @@ export default function NewRequestN({ navigation }) {
                 quantity: "",
                 condition: "",
                 description: "",
-                images: [],
+                  images: "",
                 location: "",
                 notes: "",
               });

@@ -25,9 +25,9 @@ export default function DashboardU() {
       try {
         // API
         const res = await api.get("/auth/dashboard");   
-        setStats(res.data.stats);
+        setStats(res.data.status);
 
-        const donationsData = res.data.donations || res.data.recent_donations || [];
+        const donationsData = res.data.donations || [];
         setDonations(donationsData);
 
         const completed = donationsData.filter((d) => d.status === "مكتمل").length;

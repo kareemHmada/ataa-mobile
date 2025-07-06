@@ -23,7 +23,7 @@ export default function DashboardN() {
   const fetchDashboardData = async () => {
     try {
       const res = await api.get("/dashboard"); //API
-      setStats(res.data.stats);
+      setStats(res.data.status);
       setRecent(res.data.recent_donations);
     } catch (error) {
       console.error("Dashboard load error:", error.response?.data || error.message);

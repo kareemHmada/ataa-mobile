@@ -3,7 +3,7 @@ import { View, Text, Pressable, StyleSheet } from "react-native";
 export default function MedicalReportCard({ title, date, status, imageUrl }) {
   const getStatusColor = () => {
     switch (status) {
-      case "Complete":
+      case "completed":
         return { backgroundColor: "#E8F5E9", color: "#2E7D32" };
       case "Waiting":
         return { backgroundColor: "#FFF3E0", color: "#EF6C00" };

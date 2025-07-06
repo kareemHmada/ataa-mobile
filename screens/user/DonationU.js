@@ -44,7 +44,7 @@ export default function DonationU({ navigation }) {
             key={item.id}
             title={item.title}
             category={item.category}
-            status={item.statua}
+            status={item.status}
             description={item.description}
             imageUrl={`http://YOUR_IP:8000/storage/${item.img}`}
           />
