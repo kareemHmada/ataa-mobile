@@ -1,4 +1,10 @@
-import { ScrollView, View, TextInput, StyleSheet, Image } from "react-native";
+import {
+  ScrollView,
+  View,
+  TextInput,
+  StyleSheet,
+  RefreshControl,
+} from "react-native";
 import { useState, useEffect } from "react";
 import MedicalEquipmentCard from "../../components/ui/MedicalEquipmentCard";
 import api from "../../api/api";
@@ -6,6 +12,7 @@ import api from "../../api/api";
 export default function DonationU({ navigation }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [donations, setDonations] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   const filteredItems = searchQuery
     ? donations.filter((item) =>
@@ -14,21 +21,30 @@ export default function DonationU({ navigation }) {
       )
     : donations;
 
-  useEffect(() => {
-    const focusListener = navigation.addListener("focus", async () => {
-      try {
-        const res = await api.get("/api/auth/donations");
-        setDonations(res.data);
-      } catch (error) {
-        console.log("Error loading donations:", error.response?.data || error.message);
-      }
-    });
+  const fetchDonations = async () => {
+    try {
+      const res = await api.get("/api/donations");
+      setDonations(res.data);
+    } catch (error) {
+      console.log(
+        "Error loading donations:",
+        error.response?.data || error.message
+      );
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchDonations();
+  };
+
+  useEffect(() => {
+    const focusListener = navigation.addListener("focus", fetchDonations);
     return focusListener;
   }, [navigation]);
 
-
-  console.log(donations);
   return (
     <View style={styles.container}>
       <View style={styles.searchContainer}>
@@ -40,7 +56,12 @@ export default function DonationU({ navigation }) {
         />
       </View>
 
-      <ScrollView style={styles.scrollView}>
+      <ScrollView
+        style={styles.scrollView}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         {filteredItems.map((item) => (
           <MedicalEquipmentCard
             key={item.id}
@@ -50,17 +71,11 @@ export default function DonationU({ navigation }) {
             description={item.description}
             imageUrl={item.img}
           />
-          
-        ))
-        
-        
-      }    
-        {/* <Image source={{uri:`http://localhost/ataa-api/storage/app/public/686a663725604.png`}} style={{width: 200, height: 200, alignSelf: 'center'}}/> */}
+        ))}
       </ScrollView>
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -85,5 +100,3 @@ const styles = StyleSheet.create({
     padding: 15,
   },
 });
-
-

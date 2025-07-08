@@ -17,7 +17,7 @@ import BottomTabs from "./components/Navigation/BottomTabs";
 import JoinStackNav from "./components/Navigation/JoinStackNav";
 import { NavigationContainer } from "@react-navigation/native";
 
-// 
+
 import * as Notifications from "expo-notifications";
 import { useEffect } from "react";
 import * as DeviceExpo from "expo-device";
@@ -72,46 +72,17 @@ async function registerForPushNotificationsAsync() {
 
 const Stack = createNativeStackNavigator();
 
-function AuthStack() {
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        // headerStyle: { backgroundColor: Colors.primary500 },
-        headerTintColor: "white",
-        contentStyle: { backgroundColor: "white" },
-        headerShown: false,
-      }}
-    >
-      <Stack.Screen name="DashboardN" component={DashboardN} />
-    </Stack.Navigator>
-  );
-}
-
-function AuthenticatedStack() {
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        // headerStyle: { backgroundColor: Colors.primary500 },
-        headerTintColor: "white",
-        // contentStyle: { backgroundColor: Colors.primary100 },
-      }}
-    >
-      <Stack.Screen name="Welcome" component={WelcomeScreen} />
-    </Stack.Navigator>
-  );
-}
-
 export default function App() {
-  // useEffect(() => {
-  //   registerForPushNotificationsAsync();
-  // }, []);
+  useEffect(() => {
+    registerForPushNotificationsAsync();
+  }, []);
 
   return (
     <NavigationContainer>
       <StatusBar style="dark" />
       <JoinStackNav />
     </NavigationContainer>
-  // <AdminAccounts />
+  // <LoginScreen />
 
 
   );

@@ -77,7 +77,7 @@ export default function NewRequestN({ navigation }) {
 
       form.append("image", formData.images);
 
-      await api.post("/api/auth/donation-requests", form, {
+      await api.post("/api/donation-requests", form, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -147,7 +147,7 @@ export default function NewRequestN({ navigation }) {
         <Text style={styles.label}>Images</Text>
         <Pressable style={styles.imageUpload} onPress={pickImage}>
           <Text style={styles.imageUploadText}>+ Add Images</Text>
-          <Text style={styles.imageHint}>PNG, JPG up to 10MB</Text>
+          <Text style={styles.imageHint}>PNG, JPG up to 5MB</Text>
           {formData.images && (
             <View style={styles.imagePreviewContainer}>
               <Image

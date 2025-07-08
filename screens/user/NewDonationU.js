@@ -104,7 +104,7 @@ export default function NewDonationU({ navigation }) {
         });
       }
 
-      await api.post("/api/auth/donations", form, {
+      await api.post("/api/donations", form, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -215,7 +215,7 @@ export default function NewDonationU({ navigation }) {
         ) : (
           <>
             <Text style={styles.imageUploadText}>+ Add Image</Text>
-            <Text style={styles.imageHint}>PNG, JPG up to 2MB</Text>
+            <Text style={styles.imageHint}>PNG, JPG up to 5MB</Text>
           </>
         )}
       </Pressable>

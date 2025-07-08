@@ -5,6 +5,7 @@ import {
   StyleSheet,
   ScrollView,
   ActivityIndicator,
+  RefreshControl,
 } from "react-native";
 
 import SmallCard from "../../components/ui/SmallCard";
@@ -13,41 +14,49 @@ import api from "../../api/api"; // api.js
 
 export default function DashboardU() {
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [donations, setDonations] = useState([]);
+  const [recent, setRecent] = useState([]);
   const [stats, setStats] = useState({
     total: 0,
     completed: 0,
     inProgress: 0,
   });
 
+  const fetchDashboardData = async () => {
+    try {
+      const res = await api.get("/api/dashboard");
+      setStats(res.data.status);
+      setRecent(res.data.recent_donations || []);
+
+      const donationsData = res.data.donations || [];
+      setDonations(donationsData);
+
+      const completed = donationsData.filter((d) => d.status === "مكتمل").length;
+      const inProgress = donationsData.filter((d) => d.status !== "مكتمل").length;
+
+      setStats({
+        total: donationsData.length,
+        completed,
+        inProgress,
+      });
+    } catch (error) {
+      console.error(
+        "DashboardU error:",
+        error.response?.data || error.message
+      );
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchDashboardData();
+  };
+
   useEffect(() => {
-    const fetchDashboardData = async () => {
-      try {
-        // API
-        const res = await api.get("/api/auth/dashboard");   
-        setStats(res.data.status);
-
-        const donationsData = res.data.donations || [];
-        setDonations(donationsData);
-
-        const completed = donationsData.filter((d) => d.status === "مكتمل").length;
-        const inProgress = donationsData.filter((d) => d.status !== "مكتمل").length;
-
-        setStats({
-          total: donationsData.length,
-          completed,
-          inProgress,
-        });
-      } catch (error) {
-        console.error(
-          "DashboardU error:",
-          error.response?.data || error.message
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchDashboardData();
   }, []);
 
@@ -60,7 +69,12 @@ export default function DashboardU() {
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       <View style={styles.summaryContainer}>
         <SmallCard
           titl={"Total Donations"}
@@ -98,6 +112,25 @@ export default function DashboardU() {
               key={item.id}
               title={item.title}
               date={item.created_at}
+              status={item.status}
+            />
+          ))
+        )}
+      </View>
+
+      <View style={styles.section}>
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>Request Donations</Text>
+        </View>
+
+        {recent.length === 0 ? (
+          <Text style={styles.donationTime}>No donations yet.</Text>
+        ) : (
+          recent.map((item) => (
+            <MedicalReportCard
+              key={item.id}
+              title={item.title}
+              date={item.time_ago}
               status={item.status}
             />
           ))

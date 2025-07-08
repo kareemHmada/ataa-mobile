@@ -10,6 +10,7 @@ export default function MedicalEquipmentCard({
   description,
   onPressDetails,
   imageUrl,
+  but1,but2
 }) {
   const getStatusColor = () => {
     switch (status) {
@@ -61,11 +62,11 @@ export default function MedicalEquipmentCard({
       <Text style={styles.description}>
         <Text style={{ fontWeight: "bold" }}>Description:</Text> {description}
       </Text>
-      <Pressable style={styles.detailsButton}>
+{ ( but1 === true) && (      <Pressable style={styles.detailsButton}>
         <Text style={styles.detailsButtonText}>View Details</Text>
-      </Pressable>
+      </Pressable>)}
 
-      {status === "Waiting" && (
+      {(status === "Waiting"||status === "Pending" || but2 === true ) && (
         <Pressable style={styles.cancelButton}>
           <Text style={styles.detailsButtonText}>Cancel</Text>
         </Pressable>

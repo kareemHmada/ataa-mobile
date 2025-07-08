@@ -5,10 +5,11 @@ import {
   StyleSheet,
   ScrollView,
   ActivityIndicator,
+  RefreshControl,
 } from "react-native";
 import api from "../../api/api";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import SmallCard from "../../components/ui/SmallCard";
+import MedicalReportCard from "../../components/ui/MedicalReportCard";
 
 export default function DashboardN() {
   const [stats, setStats] = useState({
@@ -19,17 +20,31 @@ export default function DashboardN() {
   });
   const [recent, setRecent] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
   const fetchDashboardData = async () => {
     try {
-      const res = await api.get("/api/auth/dashboard"); //API
-      setStats(res.data.status);
-      setRecent(res.data.recent_donations);
+      const res = await api.get("/api/donations");
+
+      setRecent(res.data);
+
+      setStats({
+        total: res.data.length,
+        messages: 0, // لو عندك رسائل فعلياً زودها هنا من API تانية
+        accepted: res.data.filter((d) => d.status === "مقبول" || d.status === "Accepted").length,
+        pending: res.data.filter((d) => d.status === "قيد الانتظار" || d.status === "Pending").length,
+      });
     } catch (error) {
       console.error("Dashboard load error:", error.response?.data || error.message);
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
+  };
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchDashboardData();
   };
 
   useEffect(() => {
@@ -45,7 +60,12 @@ export default function DashboardN() {
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       <View style={styles.summaryContainer}>
         <SmallCard
           titl={"Total Donations"}
@@ -79,22 +99,19 @@ export default function DashboardN() {
 
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Recent Donations</Text>
+          <Text style={styles.sectionTitle}>Donation Requests</Text>
         </View>
 
         {recent.length === 0 ? (
           <Text style={styles.donationTime}>No donations yet.</Text>
         ) : (
-          recent.map((item, index) => (
-            <View key={index} style={styles.donationItem}>
-              <Text style={styles.donationTitle}>{item.title}</Text>
-              <Text style={styles.donationTime}>{item.time_ago}</Text>
-              {item.status && (
-                <Text style={styles.donationDescription}>
-                  Status: {item.status}
-                </Text>
-              )}
-            </View>
+          recent.map((item) => (
+            <MedicalReportCard
+              key={item.id}
+              title={item.title}
+              date={item.date}
+              status={item.status}
+            />
           ))
         )}
       </View>
@@ -134,21 +151,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     color: "#333",
-  },
-  donationItem: {
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
-    paddingVertical: 12,
-  },
-  donationTitle: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#333",
-    marginBottom: 3,
-  },
-  donationDescription: {
-    fontSize: 14,
-    color: "#666",
   },
   donationTime: {
     fontSize: 12,

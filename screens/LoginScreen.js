@@ -40,7 +40,7 @@ export default function LoginScreen() {
       } else if (user.role === "donor" ) {
         navigation.navigate("DrawerNavigationU");
       } else if (user.role === "admin" ) {
-        navigation.navigate("DrawerNavigationU");
+        navigation.navigate("AdminAccounts");
       } else {
         navigation.navigate("BottomTabs");
       }

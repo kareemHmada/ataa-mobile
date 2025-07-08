@@ -40,6 +40,16 @@ export default function DrawerNavigationN() {
             },sceneStyle: { marginBottom: 50 }
           }}
         />
+          <Drawer.Screen
+            name="ReceviedN"
+            component={ReceviedN}
+            options={{
+              title: "Requests",
+              drawerIcon: ({ color }) => {
+                return <FontAwesome5 name="donate" size={20} color={color} />;
+              },sceneStyle: { marginBottom: 50 }
+            }}
+          />
         <Drawer.Screen
           name="ChatStackCN"
           component={ChatStackCN}
@@ -47,16 +57,6 @@ export default function DrawerNavigationN() {
             title: "Messages",
             drawerIcon: ({ color }) => {
               return <IconFont icon={"envelope"} color={color} size={20} />;
-            },sceneStyle: { marginBottom: 50 }
-          }}
-        />
-        <Drawer.Screen
-          name="ReceviedN"
-          component={ReceviedN}
-          options={{
-            title: "Recevied",
-            drawerIcon: ({ color }) => {
-              return <FontAwesome5 name="donate" size={20} color={color} />;
             },sceneStyle: { marginBottom: 50 }
           }}
         />

@@ -10,7 +10,7 @@ import {
 import { Picker } from "@react-native-picker/picker";
 
 import api from "../../api/api";
-import ReceviedCard from "../../components/ui/ReceviedCard";
+import MedicalEquipmentCard from "../../components/ui/MedicalEquipmentCard";
 
 export default function ReceviedN() {
   const [requests, setRequests] = useState([]);
@@ -21,9 +21,11 @@ export default function ReceviedN() {
 
   const fetchRequests = async () => {
     try {
-      const res = await api.get("/donation-requests");
-      setRequests(res.data);
-      applyFilter(res.data, statusFilter);
+      const res = await api.get("/api/donation-requests");
+      // لاحظ هنا البيانات جوه `data`
+      const fetchedData = res.data.data || [];
+      setRequests(fetchedData);
+      applyFilter(fetchedData, statusFilter);
     } catch (err) {
       console.error("Error fetching donation requests:", err);
     } finally {
@@ -56,13 +58,13 @@ export default function ReceviedN() {
   }, []);
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.container}>
       <View style={styles.filterContainer}>
         <Text style={styles.filterLabel}>Filter by Status:</Text>
         <Picker
           selectedValue={statusFilter}
-          style={styles.picker}
           onValueChange={onFilterChange}
+          style={styles.picker}
         >
           <Picker.Item label="All" value="All" />
           <Picker.Item label="Pending" value="Pending" />
@@ -80,14 +82,18 @@ export default function ReceviedN() {
           data={filtered}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
-            <ReceviedCard
-              imageUrl={item.images?.[0]}
+            <View style={{marginHorizontal:10}}  >
+            <MedicalEquipmentCard
+              title={item.type}
               description={item.description}
-              quantity={item.quantity}
-              type={item.type}
-              location={item.location}
               status={item.status}
+              imageUrl={item.images?.[0]}
+              quantity={item.quantity}
+              location={item.location}
+              but1={false}
+              but2={true}
             />
+            </View>
           )}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -104,24 +110,16 @@ export default function ReceviedN() {
 }
 
 const styles = StyleSheet.create({
-  center: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
+  container: { flex: 1, backgroundColor: "#F5F5F5" },
   filterContainer: {
     padding: 10,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#fff",
     borderBottomWidth: 1,
     borderBottomColor: "#ccc",
+    marginBottom:20,
+    borderRadius: 10 
   },
-  filterLabel: {
-    fontSize: 14,
-    fontWeight: "bold",
-    marginBottom: 5,
-  },
-  picker: {
-    backgroundColor: "#fff",
-    borderRadius: 5,
-  },
+  filterLabel: { fontSize: 14, fontWeight: "bold", marginBottom: 5 },
+  picker: { backgroundColor: "#f0f0f0", borderRadius: 5 },
+  center: { flex: 1, justifyContent: "center", alignItems: "center" },
 });
