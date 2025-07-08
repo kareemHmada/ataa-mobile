@@ -37,7 +37,9 @@ export default function LoginScreen() {
 
       if (user.role === "org") {
         navigation.navigate("DrawerNavigationN");
-      } else if (user.role === "donor" || user.role === "receiver") {
+      } else if (user.role === "donor" ) {
+        navigation.navigate("DrawerNavigationU");
+      } else if (user.role === "admin" ) {
         navigation.navigate("DrawerNavigationU");
       } else {
         navigation.navigate("BottomTabs");

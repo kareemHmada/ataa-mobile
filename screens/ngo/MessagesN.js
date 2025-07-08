@@ -21,7 +21,7 @@ export default function MessagesN({ navigation }) {
 
   const fetchConversations = async () => {
     try {
-      const res = await api.get("/conversations");
+      const res = await api.get("/api/conversations");
       setConversations(res.data);
     } catch (err) {
       console.log("Error fetching conversations:", err.response?.data || err.message);

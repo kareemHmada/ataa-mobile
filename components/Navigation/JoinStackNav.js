@@ -7,6 +7,7 @@ import SignupScreenU from "../../screens/user/SignupScreenU";
 import SignupScreenN from "../../screens/ngo/SignupScreenN";
 import DrawerNavigationN from "./DrawerNavigationN";
 import DrawerNavigationU from "./DrawerNavigationU";
+import AdminAccounts from "../../screens/AdminAccounts";
 
 const Stack = createStackNavigator();
 
@@ -15,6 +16,7 @@ export default function JoinStackNav() {
     <>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="BottomTabs" component={BottomTabs}  />
+        <Stack.Screen name="AdminAccounts" component={AdminAccounts}  />
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
         <Stack.Screen name="AccountTypeScreen" component={AccountTypeScreen} />
         <Stack.Screen name="SignupScreenN" component={SignupScreenN} />

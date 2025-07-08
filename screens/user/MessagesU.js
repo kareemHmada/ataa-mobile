@@ -19,7 +19,7 @@ export default function MessagesU({ navigation }) {
 
   const fetchConversations = async () => {
     try {
-      const res = await api.get("/conversations");
+      const res = await api.get("/api/conversations");
       setConversations(res.data);
     } catch (err) {
       console.log("Failed to fetch conversations:", err);

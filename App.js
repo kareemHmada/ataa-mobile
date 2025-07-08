@@ -23,6 +23,7 @@ import { useEffect } from "react";
 import * as DeviceExpo from "expo-device";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import api from "./api/api";
+import AdminAccounts from "./screens/AdminAccounts";
 
 // 
 Notifications.setNotificationHandler({
@@ -57,7 +58,7 @@ async function registerForPushNotificationsAsync() {
     try {
       const authToken = await AsyncStorage.getItem("token");
       if (authToken) {
-        await api.post("/notifications/token", { fcm_token: token });
+        await api.post("/api/notifications/token", { fcm_token: token });
       }
     } catch (error) {
       console.log("Failed to send FCM token:", error.response?.data || error.message);
@@ -101,14 +102,17 @@ function AuthenticatedStack() {
 }
 
 export default function App() {
-  useEffect(() => {
-    registerForPushNotificationsAsync();
-  }, []);
+  // useEffect(() => {
+  //   registerForPushNotificationsAsync();
+  // }, []);
 
   return (
     <NavigationContainer>
       <StatusBar style="dark" />
       <JoinStackNav />
     </NavigationContainer>
+  // <AdminAccounts />
+
+
   );
 }

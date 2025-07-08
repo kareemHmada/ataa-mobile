@@ -24,6 +24,9 @@
     },
     "web": {
       "favicon": "./assets/Ataa.png"
-    }
+    },
+    "plugins": [
+      "expo-notifications"
+    ]
   }
 }

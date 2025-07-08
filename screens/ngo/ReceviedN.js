@@ -6,8 +6,9 @@ import {
   StyleSheet,
   ActivityIndicator,
   RefreshControl,
-  Picker, 
 } from "react-native";
+import { Picker } from "@react-native-picker/picker";
+
 import api from "../../api/api";
 import ReceviedCard from "../../components/ui/ReceviedCard";
 

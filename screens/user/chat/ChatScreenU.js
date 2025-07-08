@@ -14,7 +14,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import api from "../../../api/api";
 import BackBtu from "../../../components/ui/BackBut";
 
-export default function ChatScreenU({ route }) {
+export default function ChatScreenU({ route, navigation }) {
   const { conversation } = route.params;
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
