@@ -40,16 +40,6 @@ export default function DrawerNavigationU() {
           }}
         />
         <Drawer.Screen
-          name="ChatStack"
-          component={ChatStack}
-          options={{
-            title: "Messages",
-            drawerIcon: ({ color }) => {
-              return <IconFont icon={"envelope"} color={color} size={20} />;
-            },sceneStyle: { marginBottom: 50 }
-          }}
-        />
-        <Drawer.Screen
           name="NewDonationU"
           component={NewDonationU}
           options={{
@@ -59,6 +49,16 @@ export default function DrawerNavigationU() {
             },sceneStyle: { marginBottom: 50 }
           }}
         />
+          <Drawer.Screen
+            name="ChatStack"
+            component={ChatStack}
+            options={{
+              title: "Messages",
+              drawerIcon: ({ color }) => {
+                return <IconFont icon={"envelope"} color={color} size={20} />;
+              },sceneStyle: { marginBottom: 50 }
+            }}
+          />
         <Drawer.Screen
           name="SettingsU"
           component={SettingsU}

@@ -12,7 +12,7 @@ import { Picker } from "@react-native-picker/picker";
 import api from "../../api/api";
 import MedicalEquipmentCard from "../../components/ui/MedicalEquipmentCard";
 
-export default function ReceviedN() {
+export default function ReceviedN({ navigation }) {
   const [requests, setRequests] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [statusFilter, setStatusFilter] = useState("All");
@@ -90,8 +90,8 @@ export default function ReceviedN() {
               imageUrl={item.images?.[0]}
               quantity={item.quantity}
               location={item.location}
-              but1={false}
-              but2={true}
+              onPressDetails={() => navigation.navigate("DonationRequestsDetails", item)}
+              but1={true}
             />
             </View>
           )}

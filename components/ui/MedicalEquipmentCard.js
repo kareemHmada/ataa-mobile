@@ -14,11 +14,11 @@ export default function MedicalEquipmentCard({
 }) {
   const getStatusColor = () => {
     switch (status) {
-      case "completed":
+      case "Complete":
         return { backgroundColor: "#E8F5E9", color: "#2E7D32" };
-      case "Waiting":
+      case "Received":
         return { backgroundColor: "#FFF3E0", color: "#EF6C00" };
-      case "Implementation":
+      case "Pending":
         return { backgroundColor: "#E3F2FD", color: "#1565C0" };
       default:
         return { backgroundColor: "#F5F5F5", color: "#424242" };
@@ -62,7 +62,7 @@ export default function MedicalEquipmentCard({
       <Text style={styles.description}>
         <Text style={{ fontWeight: "bold" }}>Description:</Text> {description}
       </Text>
-{ ( but1 === true) && (      <Pressable style={styles.detailsButton}>
+{ ( but1 === true) && (      <Pressable style={styles.detailsButton}  onPress={onPressDetails}>
         <Text style={styles.detailsButtonText}>View Details</Text>
       </Pressable>)}
 

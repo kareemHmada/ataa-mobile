@@ -70,6 +70,8 @@ export default function DonationU({ navigation }) {
             status={item.status}
             description={item.description}
             imageUrl={item.img}
+            onPressDetails={() => navigation.navigate("DonationDetails", item)}
+            but1={true}
           />
         ))}
       </ScrollView>

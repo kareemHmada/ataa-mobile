@@ -200,12 +200,12 @@ export default function AdminAccounts() {
                   >
                     <Text style={styles.buttonText}>Change Status</Text>
                   </Pressable>
-                  <Pressable
+                  {/* <Pressable
                     style={[styles.button, { backgroundColor: "#4CAF50" }]}
                     onPress={() => confirmDonation(item.id)}
                   >
                     <Text style={styles.buttonText}>Confirm</Text>
-                  </Pressable>
+                  </Pressable> */}
                   <Pressable
                     style={[styles.button, { backgroundColor: "#ff4d4d" }]}
                     onPress={() => deleteDonation(item.id)}
@@ -232,7 +232,7 @@ export default function AdminAccounts() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, paddingTop: 50, backgroundColor: "#f2f2f2" },
+  container: { flex: 1, padding: 20, paddingTop: 50, backgroundColor: "#f2f2f2" , marginBottom: 50},
   heading: { fontSize: 24, fontWeight: "bold", marginBottom: 20, textAlign: "center" },
   tabContainer: { flexDirection: "row", marginBottom: 20 },
   tabButton: {

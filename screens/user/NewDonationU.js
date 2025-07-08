@@ -39,7 +39,7 @@ export default function NewDonationU({ navigation }) {
     title: "",
     date: new Date().toISOString().split("T")[0],
     imageUrl: "",
-    status: "Waiting",
+    status: "Received",
     description: "",
     category: "",
     location: "",

@@ -8,6 +8,8 @@ import SignupScreenN from "../../screens/ngo/SignupScreenN";
 import DrawerNavigationN from "./DrawerNavigationN";
 import DrawerNavigationU from "./DrawerNavigationU";
 import AdminAccounts from "../../screens/AdminAccounts";
+import DonationDetails from "../../screens/DonationDetails";
+import DonationRequestsDetails from "../../screens/DonationRequestsDetails";
 
 const Stack = createStackNavigator();
 
@@ -23,6 +25,8 @@ export default function JoinStackNav() {
         <Stack.Screen name="SignupScreenU" component={SignupScreenU} />
         <Stack.Screen name="DrawerNavigationN" component={DrawerNavigationN} />
         <Stack.Screen name="DrawerNavigationU" component={DrawerNavigationU} />
+        <Stack.Screen name="DonationDetails" component={DonationDetails} />
+        <Stack.Screen name="DonationRequestsDetails" component={DonationRequestsDetails} />
       </Stack.Navigator>
     </>
   );

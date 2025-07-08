@@ -12,11 +12,11 @@ import SmallCard from "../../components/ui/SmallCard";
 import MedicalReportCard from "../../components/ui/MedicalReportCard";
 import api from "../../api/api"; // api.js
 
-export default function DashboardU() {
+export default function DashboardU({navigation}) {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [donations, setDonations] = useState([]);
-  const [recent, setRecent] = useState([]);
+  const [requests, setRequests] = useState([]); // ✅ requests state
   const [stats, setStats] = useState({
     total: 0,
     completed: 0,
@@ -25,9 +25,10 @@ export default function DashboardU() {
 
   const fetchDashboardData = async () => {
     try {
+      // 📌 donations + recent from dashboard API
       const res = await api.get("/api/dashboard");
+
       setStats(res.data.status);
-      setRecent(res.data.recent_donations || []);
 
       const donationsData = res.data.donations || [];
       setDonations(donationsData);
@@ -40,6 +41,11 @@ export default function DashboardU() {
         completed,
         inProgress,
       });
+
+      // 📌 requests from another API (association requests)
+      const req = await api.get("/api/donation-requests");
+      setRequests(req.data.data || []);
+
     } catch (error) {
       console.error(
         "DashboardU error:",
@@ -113,25 +119,28 @@ export default function DashboardU() {
               title={item.title}
               date={item.created_at}
               status={item.status}
+              onPressDetails={() => navigation.navigate("DonationDetails", { id: item.id })}
             />
           ))
         )}
       </View>
 
+
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Request Donations</Text>
+          <Text style={styles.sectionTitle}>Requests from Associations</Text>
         </View>
 
-        {recent.length === 0 ? (
-          <Text style={styles.donationTime}>No donations yet.</Text>
+        {requests.length === 0 ? (
+          <Text style={styles.donationTime}>No requests yet.</Text>
         ) : (
-          recent.map((item) => (
+          requests.map((item) => (
             <MedicalReportCard
               key={item.id}
-              title={item.title}
-              date={item.time_ago}
+              title={item.type}
+              date={item.condition}
               status={item.status}
+              onPressDetails={() => navigation.navigate("DonationRequestsDetails", { id: item.id })}
             />
           ))
         )}

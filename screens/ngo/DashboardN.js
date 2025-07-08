@@ -11,7 +11,7 @@ import api from "../../api/api";
 import SmallCard from "../../components/ui/SmallCard";
 import MedicalReportCard from "../../components/ui/MedicalReportCard";
 
-export default function DashboardN() {
+export default function DashboardN({ navigation }) {
   const [stats, setStats] = useState({
     total: 0,
     messages: 0,
@@ -111,6 +111,7 @@ export default function DashboardN() {
               title={item.title}
               date={item.date}
               status={item.status}
+              onPressDetails={() => navigation.navigate("DonationDetails", item)}
             />
           ))
         )}

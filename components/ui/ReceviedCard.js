@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Image, Pressable } from "react-native";
 
-export default function ReceviedCard({imageUrl,description , type , quantity,location}) {
+export default function ReceviedCard({imageUrl,description , type , quantity,location , onPressDetails}) {
   
   let status = "Waiting";
 
@@ -8,9 +8,9 @@ export default function ReceviedCard({imageUrl,description , type , quantity,loc
     switch (status) {
       case "Complete":
         return { backgroundColor: "#E8F5E9", color: "#2E7D32" };
-      case "Waiting":
+      case "Received":
         return { backgroundColor: "#FFF3E0", color: "#EF6C00" };
-      case "Implementation":
+      case "Pending":
         return { backgroundColor: "#E3F2FD", color: "#1565C0" };
       default:
         return { backgroundColor: "#F5F5F5", color: "#424242" };
