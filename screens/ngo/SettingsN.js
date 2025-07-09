@@ -57,20 +57,16 @@ export default function SettingsN() {
 
   const handleLogout = () => {
     Alert.alert(
-      "تأكيد الخروج",
-      "هل أنت متأكد أنك تريد تسجيل الخروج؟",
+      "Logout",
+      "Are you sure you want to log out?",
       [
+        { text: "cancel", style: "cancel" },
         {
-          text: "إلغاء",
-          style: "cancel",
-        },
-        {
-          text: "نعم، تسجيل الخروج",
+          text: "logout",
           style: "destructive",
           onPress: async () => {
             await AsyncStorage.removeItem("token");
             await AsyncStorage.removeItem("user");
-
             navigation.reset({
               index: 0,
               routes: [{ name: "LoginScreen" }],

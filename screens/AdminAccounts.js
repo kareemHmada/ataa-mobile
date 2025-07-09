@@ -5,10 +5,11 @@ import {
   StyleSheet,
   Pressable,
   Alert,
+  RefreshControl,
 } from "react-native";
 import { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
-import api from "../api/api"; // Laravel API instance
+import api from "../api/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function AdminAccounts() {
@@ -17,27 +18,36 @@ export default function AdminAccounts() {
   const [activeTab, setActiveTab] = useState("users");
   const [users, setUsers] = useState([]);
   const [donations, setDonations] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
-  // ✅ تحميل المستخدمين
   const loadUsers = async () => {
     try {
       const res = await api.get("/api/admin/users");
       setUsers(res.data);
     } catch (error) {
       console.log(error.response?.data || error.message);
-      Alert.alert("❌ Error", "Failed to load users");
+      Alert.alert("Error", "Failed to load users");
     }
   };
 
-  // ✅ تحميل التبرعات
   const loadDonations = async () => {
     try {
       const res = await api.get("/api/admin/donations");
       setDonations(res.data);
     } catch (error) {
       console.log(error.response?.data || error.message);
-      Alert.alert("❌ Error", "Failed to load donations");
+      Alert.alert("Error", "Failed to load donations");
     }
+  };
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    if (activeTab === "users") {
+      await loadUsers();
+    } else {
+      await loadDonations();
+    }
+    setRefreshing(false);
   };
 
   useEffect(() => {
@@ -45,75 +55,58 @@ export default function AdminAccounts() {
     loadDonations();
   }, []);
 
-  // ✅ تحقق يوزر
   const verifyUser = async (id) => {
     try {
       await api.post(`/api/admin/users/${id}/verify`);
-      Alert.alert("✅ Success", "User verified");
+      Alert.alert("Success", "User verified");
       loadUsers();
     } catch (error) {
       console.log(error.response?.data || error.message);
-      Alert.alert("❌ Error", "Failed to verify user");
+      Alert.alert("Error", "Failed to verify user");
     }
   };
 
-  // ✅ حذف يوزر
   const deleteUser = async (id) => {
     try {
       await api.delete(`/api/admin/users/${id}`);
-      Alert.alert("✅ Success", "User deleted");
+      Alert.alert("Success", "User deleted");
       loadUsers();
     } catch (error) {
       console.log(error.response?.data || error.message);
-      Alert.alert("❌ Error", "Failed to delete user");
+      Alert.alert("Error", "Failed to delete user");
     }
   };
 
-  // ✅ تغيير حالة تبرع
   const changeDonationStatus = async (id) => {
     try {
       await api.post(`/api/admin/donations/${id}/change-status`);
-      Alert.alert("✅ Success", "Donation status updated");
+      Alert.alert("Success", "Donation status updated");
       loadDonations();
     } catch (error) {
       console.log(error.response?.data || error.message);
-      Alert.alert("❌ Error", "Failed to update donation status");
+      Alert.alert("Error", "Failed to update donation status");
     }
   };
 
-  // ✅ تأكيد تبرع
-  const confirmDonation = async (id) => {
-    try {
-      await api.post(`/api/admin/donations/${id}/confirm`);
-      Alert.alert("✅ Success", "Donation confirmed");
-      loadDonations();
-    } catch (error) {
-      console.log(error.response?.data || error.message);
-      Alert.alert("❌ Error", "Failed to confirm donation");
-    }
-  };
-
-  // ✅ حذف تبرع
   const deleteDonation = async (id) => {
     try {
       await api.delete(`/api/admin/donations/${id}`);
-      Alert.alert("✅ Success", "Donation deleted");
+      Alert.alert("Success", "Donation deleted");
       loadDonations();
     } catch (error) {
       console.log(error.response?.data || error.message);
-      Alert.alert("❌ Error", "Failed to delete donation");
+      Alert.alert("Error", "Failed to delete donation");
     }
   };
 
-  // ✅ تسجيل الخروج
   const handleLogout = () => {
     Alert.alert(
-      "تأكيد الخروج",
-      "هل أنت متأكد أنك تريد تسجيل الخروج؟",
+      "Logout",
+      "Are you sure you want to log out?",
       [
-        { text: "إلغاء", style: "cancel" },
+        { text: "cancel", style: "cancel" },
         {
-          text: "نعم، تسجيل الخروج",
+          text: "logout",
           style: "destructive",
           onPress: async () => {
             await AsyncStorage.removeItem("token");
@@ -156,6 +149,9 @@ export default function AdminAccounts() {
           <FlatList
             data={users}
             keyExtractor={(item) => item.id.toString()}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
             renderItem={({ item }) => (
               <View style={styles.card}>
                 <Text>Name: {item.name}</Text>
@@ -189,6 +185,9 @@ export default function AdminAccounts() {
           <FlatList
             data={donations}
             keyExtractor={(item) => item.id.toString()}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
             renderItem={({ item }) => (
               <View style={styles.card}>
                 <Text>Title: {item.title}</Text>
@@ -200,12 +199,6 @@ export default function AdminAccounts() {
                   >
                     <Text style={styles.buttonText}>Change Status</Text>
                   </Pressable>
-                  {/* <Pressable
-                    style={[styles.button, { backgroundColor: "#4CAF50" }]}
-                    onPress={() => confirmDonation(item.id)}
-                  >
-                    <Text style={styles.buttonText}>Confirm</Text>
-                  </Pressable> */}
                   <Pressable
                     style={[styles.button, { backgroundColor: "#ff4d4d" }]}
                     onPress={() => deleteDonation(item.id)}
@@ -232,9 +225,23 @@ export default function AdminAccounts() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, paddingTop: 50, backgroundColor: "#f2f2f2" , marginBottom: 50},
-  heading: { fontSize: 24, fontWeight: "bold", marginBottom: 20, textAlign: "center" },
-  tabContainer: { flexDirection: "row", marginBottom: 20 },
+  container: {
+    flex: 1,
+    padding: 20,
+    paddingTop: 50,
+    backgroundColor: "#f2f2f2",
+    marginBottom: 50,
+  },
+  heading: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  tabContainer: {
+    flexDirection: "row",
+    marginBottom: 20,
+  },
   tabButton: {
     flex: 1,
     borderRadius: 5,
@@ -268,7 +275,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#EAEAEA",
   },
-  buttonsRow: { flexDirection: "row", marginTop: 10, justifyContent: "space-between" },
+  buttonsRow: {
+    flexDirection: "row",
+    marginTop: 10,
+    justifyContent: "space-between",
+  },
   button: {
     backgroundColor: "#4CAF50",
     padding: 8,

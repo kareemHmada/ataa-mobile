@@ -30,7 +30,7 @@ export default function AccountTypeScreen() {
 
   return (
     <>
-      <View style={{ paddingTop: 60, backgroundColor: "#fff", paddingLeft: 20 }}>
+      <View style={{ paddingTop: 51, backgroundColor: "#fff" }}>
         <BackBtu screen={"LoginScreen"} />
       </View>
       <View style={styles.container}>

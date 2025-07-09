@@ -25,7 +25,7 @@ export default function Contact() {
 
   const handleSubmit = async () => {
     if (!name || !email || !subject || !message) {
-      Alert.alert("خطأ", "يرجى تعبئة جميع الحقول");
+      Alert.alert("Error", "Please fill all fields");
       return;
     }
 
@@ -37,14 +37,14 @@ export default function Contact() {
         message,
       });
 
-      Alert.alert("تم الإرسال", "تم إرسال رسالتك بنجاح");
+      Alert.alert("Success", "Message sent successfully!");
       setName("");
       setEmail("");
       setSubject("");
       setMessage("");
     } catch (error) {
       console.error("Contact error:", error.response?.data || error.message);
-      Alert.alert("فشل الإرسال", "حدث خطأ أثناء إرسال الرسالة");
+      Alert.alert("Error", "Failed to send message");
     }
   };
 

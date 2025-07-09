@@ -30,7 +30,7 @@ export default function DashboardN({ navigation }) {
 
       setStats({
         total: res.data.length,
-        messages: 0, // لو عندك رسائل فعلياً زودها هنا من API تانية
+        messages: 0,
         accepted: res.data.filter((d) => d.status === "مقبول" || d.status === "Accepted").length,
         pending: res.data.filter((d) => d.status === "قيد الانتظار" || d.status === "Pending").length,
       });
@@ -45,6 +45,25 @@ export default function DashboardN({ navigation }) {
   const onRefresh = async () => {
     setRefreshing(true);
     await fetchDashboardData();
+  };
+
+  // ✅ دوال التغيير الجديدة
+  const handleAcceptance = async (id) => {
+    try {
+      await api.post(`/api/admin/donations/${id}/change-status`);
+      setRecent((prev) => prev.filter((d) => d.id !== id));
+    } catch (error) {
+      console.error("Acceptance error:", error.response?.data || error.message);
+    }
+  };
+
+  const handleCancel = async (id) => {
+    try {
+      await api.delete(`/api/admin/donations/${id}`);
+      setRecent((prev) => prev.filter((d) => d.id !== id));
+    } catch (error) {
+      console.error("Delete error:", error.response?.data || error.message);
+    }
   };
 
   useEffect(() => {
@@ -112,6 +131,10 @@ export default function DashboardN({ navigation }) {
               date={item.date}
               status={item.status}
               onPressDetails={() => navigation.navigate("DonationDetails", item)}
+              onAcceptance={() => handleAcceptance(item.id)}
+              onCancel={() => handleCancel(item.id)}
+              but1={true}
+              but2={true}
             />
           ))
         )}

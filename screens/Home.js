@@ -8,6 +8,7 @@ import {
   ScrollView,
   ActivityIndicator,
   Alert,
+  RefreshControl
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import api from "../api/api";
@@ -15,8 +16,10 @@ import HomeCard from "../components/ui/HomeCard";
 
 export default function Home() {
   const navigation = useNavigation();
-  const [stats, setStats] = useState(null);
+  const [stats, setStats] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
 
   const fetchStats = async () => {
     try {
@@ -24,19 +27,29 @@ export default function Home() {
       setStats(res.data);
     } catch (error) {
       console.log("Error fetching stats:", error);
-      Alert.alert("خطأ", "تعذر تحميل البيانات");
+      Alert.alert("Error", "Data retrieval failed");
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
   };
 
   useEffect(() => {
     fetchStats();
   }, []);
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchStats();
+  };
 
   return (
     <View style={styles.appContainer}>
-      <ScrollView>
+      <ScrollView
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+      
+      >
         <View style={styles.container}>
           <Image
             source={require("../assets/Ataa.png")}

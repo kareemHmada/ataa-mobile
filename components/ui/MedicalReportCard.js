@@ -1,6 +1,17 @@
 import { View, Text, Pressable, StyleSheet } from "react-native";
 
-export default function MedicalReportCard({ title, date, status, imageUrl , onPressDetails}) {
+export default function MedicalReportCard({
+  title,
+  date,
+  status,
+  imageUrl,
+  onPressDetails,
+  onAcceptance,
+  but1,
+  but2,
+  onCancel,
+  but3
+}) {
   const getStatusColor = () => {
     switch (status) {
       case "Complete":
@@ -9,11 +20,34 @@ export default function MedicalReportCard({ title, date, status, imageUrl , onPr
         return { backgroundColor: "#FFF3E0", color: "#EF6C00" };
       case "Pending":
         return { backgroundColor: "#E3F2FD", color: "#1565C0" };
+      case "Approved":
+          return { backgroundColor: "#E8F5E9", color: "#2E7D32" };
       default:
         return { backgroundColor: "#F5F5F5", color: "#424242" };
     }
   };
   const statusStyle = getStatusColor();
+
+
+
+  const getStatusBut2 = () => {
+    switch (but3) {
+      case false:
+        return {width: '100%',};
+      default:
+        return {width: '48%',};
+    }
+  };
+  const statusButStyle2 = getStatusBut2();
+  const getStatusBut3 = () => {
+    switch (but2) {
+      case false:
+        return {width: '100%',};
+      default:
+        return {width: '48%',};
+    }
+  };
+  const statusButStyle3 = getStatusBut3();
 
   return (
     <View style={styles.card}>
@@ -48,9 +82,23 @@ export default function MedicalReportCard({ title, date, status, imageUrl , onPr
         </View>
       </View>
 
-      <Pressable style={styles.detailsButton}   onPress={onPressDetails}>
-        <Text style={styles.detailsButtonText}>View Details</Text>
-      </Pressable>
+      {but1 === true && (
+        <Pressable style={styles.detailsButton} onPress={onPressDetails}>
+          <Text style={styles.detailsButtonText}>View Details</Text>
+        </Pressable>
+      )}
+
+      {(status === "Received" || status === "Pending" ) && (
+        
+        <View style={styles.buttonContainer}>
+        { but2 === true && (<Pressable style={[styles.cancelButton , {backgroundColor:'#2196f3' , width: statusButStyle2.width,}]} onPress={onAcceptance} >
+        <Text style={styles.detailsButtonText}>Acceptance</Text>
+      </Pressable>)}
+        { but3 === true && (<Pressable style={[styles.cancelButton ,{width: statusButStyle3.width,}]}  onPress={onCancel}>
+        <Text style={styles.detailsButtonText}>Cancel</Text>
+      </Pressable>)}
+      </View>
+      )}
     </View>
   );
 }
@@ -116,4 +164,17 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "500",
   },
+  cancelButton: {
+    backgroundColor: "#dc3545",
+    borderRadius: 8,
+    paddingVertical: 10,
+    alignItems: "center",
+    marginTop: 10,
+    width: "48%",
+  },
+  buttonContainer:{
+    flexDirection:"row",
+    justifyContent:"space-around",
+    
+  }
 });

@@ -1,4 +1,4 @@
-import { View, StyleSheet, ActivityIndicator } from "react-native";
+import { View, StyleSheet, ActivityIndicator , ScrollView  } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { useEffect, useState, useLayoutEffect } from "react";
 import api from "../api/api";
@@ -42,9 +42,9 @@ export default function DonationRequestDetails() {
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={{marginBottom:50 , marginTop: 40}} >
       <DonationRequestCard item={donationRequest} />
-    </View>
+    </ScrollView>
   );
 }
 
@@ -52,9 +52,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: "#F9F9F9",
+    backgroundColor: "#fff",
     justifyContent: "center",
     alignItems: "center",
   },
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
+
 });

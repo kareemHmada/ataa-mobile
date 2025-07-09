@@ -1,5 +1,6 @@
 import { useState } from "react";
 import {
+  SafeAreaView,
   View,
   Text,
   TextInput,
@@ -8,12 +9,16 @@ import {
   Platform,
   StyleSheet,
   Alert,
+  Dimensions,
+  ScrollView,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import api from "../../api/api";
 import BackBtu from "../../components/ui/BackBut";
 import ButSo from "../../components/ui/ButSo";
 import { useNavigation, useRoute } from "@react-navigation/native";
+
+const { width, height } = Dimensions.get("window");
 
 export default function SignupScreenU() {
   const navigation = useNavigation();
@@ -67,18 +72,22 @@ export default function SignupScreenU() {
   };
 
   return (
-    <>
-      <View style={{ paddingTop: 30, backgroundColor: "#fff" }}>
-        <BackBtu screen={"LoginScreen"} />
-      </View>
-      <View style={styles.container}>
-        <Text style={styles.header}>SIGN UP</Text>
-
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={styles.container}
-          keyboardVerticalOffset={90}
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+          <View style={{ paddingTop: height * 0.02 , marginTop:36}}>
+            <BackBtu screen={"LoginScreen"} />
+          </View>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={50}
+      >
+        <ScrollView
+          contentContainerStyle={styles.scrollContainer}
+          showsVerticalScrollIndicator={false}
         >
+
+          <Text style={styles.header}>SIGN UP</Text>
+
           <View style={styles.formContainer}>
             <TextInput
               style={styles.input}
@@ -97,14 +106,14 @@ export default function SignupScreenU() {
             <TextInput
               style={styles.input}
               placeholder="Password"
-              secureTextEntry={true}
+              secureTextEntry
               value={password}
               onChangeText={setPassword}
             />
             <TextInput
               style={styles.input}
               placeholder="Confirm Password"
-              secureTextEntry={true}
+              secureTextEntry
               value={passwordConfirm}
               onChangeText={setPasswordConfirm}
             />
@@ -113,63 +122,63 @@ export default function SignupScreenU() {
               <Text style={styles.submitButtonText}>SIGN UP</Text>
             </Pressable>
           </View>
-        </KeyboardAvoidingView>
 
-        <Text style={styles.orText}>or continue with</Text>
+          <Text style={styles.orText}>or continue with</Text>
 
-        <View style={styles.butSo}>
-          <ButSo icon={"facebook"} color={"#1877F2"} />
-        </View>
-      </View>
-    </>
+          <View style={styles.butSo}>
+            <ButSo icon={"facebook"} color={"#1877F2"} />
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: "#fff",
+  scrollContainer: {
+    flexGrow: 1,
     justifyContent: "center",
-    paddingBottom: 100,
+    paddingHorizontal: width * 0.05,
+    paddingBottom: height * 0.05,
+    marginTop:30
   },
   header: {
-    fontSize: 36,
+    fontSize: width * 0.08,
     fontWeight: "bold",
-    marginTop: 50,
-    marginBottom: 30,
     textAlign: "center",
+    marginBottom: height * 0.03,
   },
   formContainer: {
-    marginTop: 20,
+    marginBottom: height * 0.03,
   },
   input: {
-    height: 50,
+    height: height * 0.065,
     borderColor: "#ddd",
     borderWidth: 1,
-    borderRadius: 20,
-    paddingHorizontal: 15,
-    marginBottom: 15,
+    borderRadius: width * 0.05,
+    paddingHorizontal: width * 0.04,
+    marginBottom: height * 0.015,
+    fontSize: width * 0.04,
   },
   submitButton: {
     backgroundColor: "#2356D5",
-    height: 50,
-    borderRadius: 20,
+    height: height * 0.065,
+    borderRadius: width * 0.05,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 15,
   },
   submitButtonText: {
     color: "#fff",
     fontWeight: "bold",
+    fontSize: width * 0.045,
   },
   orText: {
     textAlign: "center",
-    marginVertical: 20,
     color: "#666",
+    marginBottom: height * 0.02,
   },
   butSo: {
     flexDirection: "row",
-    justifyContent: "space-evenly",
+    justifyContent: "center",
   },
 });

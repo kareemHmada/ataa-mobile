@@ -1,5 +1,6 @@
 import { useState } from "react";
 import {
+  SafeAreaView,
   View,
   Text,
   TextInput,
@@ -8,12 +9,16 @@ import {
   Platform,
   StyleSheet,
   Alert,
+  Dimensions,
+  ScrollView,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import api from "../../api/api";
 import BackBtu from "../../components/ui/BackBut";
 import ButSo from "../../components/ui/ButSo";
 import { useNavigation } from "@react-navigation/native";
+
+const { width, height } = Dimensions.get("window");
 
 export default function SignupScreenN() {
   const navigation = useNavigation();
@@ -27,12 +32,7 @@ export default function SignupScreenN() {
 
   const handleSubmit = async () => {
     if (
-      !name ||
-      !email ||
-      !password ||
-      !passwordConfirm ||
-      !institution ||
-      !license
+      !name || !email || !password || !passwordConfirm || !institution || !license
     ) {
       Alert.alert("Error", "Please fill all fields");
       return;
@@ -71,23 +71,26 @@ export default function SignupScreenN() {
     } catch (error) {
       console.log("Signup error:", error.response?.data || error.message);
       Alert.alert("Error", "Something went wrong during signup.");
-
     }
   };
 
   return (
-    <>
-      <View style={{ paddingTop: 30, backgroundColor: "#fff" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+      <View style={{ paddingTop: height * 0.02, marginTop: 36 }}>
         <BackBtu screen={"LoginScreen"} />
       </View>
-      <View style={styles.container}>
-        <Text style={styles.header}>SIGN UP</Text>
 
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={styles.container}
-          keyboardVerticalOffset={90}
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={50}
+      >
+        <ScrollView
+          contentContainerStyle={styles.scrollContainer}
+          showsVerticalScrollIndicator={false}
         >
+          <Text style={styles.header}>SIGN UP</Text>
+
           <View style={styles.formContainer}>
             <TextInput
               style={styles.input}
@@ -98,34 +101,35 @@ export default function SignupScreenN() {
             <TextInput
               style={styles.input}
               placeholder="Email"
-              value={email}
-              onChangeText={setEmail}
               keyboardType="email-address"
               autoCapitalize="none"
+              value={email}
+              onChangeText={setEmail}
             />
             <TextInput
               style={styles.input}
               placeholder="Password"
+              secureTextEntry
               value={password}
               onChangeText={setPassword}
-              secureTextEntry={true}
             />
             <TextInput
               style={styles.input}
               placeholder="Confirm Password"
+              secureTextEntry
               value={passwordConfirm}
               onChangeText={setPasswordConfirm}
-              secureTextEntry={true}
             />
-            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+
+            <View style={styles.rowInputs}>
               <TextInput
-                style={styles.inputN}
+                style={styles.inputHalf}
                 placeholder="Institution name"
                 value={institution}
                 onChangeText={setInstitution}
               />
               <TextInput
-                style={styles.inputN}
+                style={styles.inputHalf}
                 placeholder="License number"
                 keyboardType="number-pad"
                 value={license}
@@ -137,72 +141,76 @@ export default function SignupScreenN() {
               <Text style={styles.submitButtonText}>SIGN UP</Text>
             </Pressable>
           </View>
-        </KeyboardAvoidingView>
 
-        <Text style={styles.orText}>or continue with</Text>
+          <Text style={styles.orText}>or continue with</Text>
 
-        <View style={styles.butSo}>
-          <ButSo icon={"facebook"} color={"#1877F2"} />
-        </View>
-      </View>
-    </>
+          <View style={styles.butSo}>
+            <ButSo icon={"facebook"} color={"#1877F2"} />
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: "#fff",
+  scrollContainer: {
+    flexGrow: 1,
     justifyContent: "center",
-    paddingBottom: 100,
+    paddingHorizontal: width * 0.05,
+    paddingBottom: height * 0.05,
   },
   header: {
-    fontSize: 36,
+    fontSize: width * 0.08,
     fontWeight: "bold",
-    marginTop: 50,
-    marginBottom: 30,
     textAlign: "center",
+    marginBottom: height * 0.03,
   },
   formContainer: {
-    marginTop: 20,
+    marginBottom: height * 0.03,
   },
   input: {
-    height: 50,
+    height: height * 0.065,
     borderColor: "#ddd",
     borderWidth: 1,
-    borderRadius: 20,
-    paddingHorizontal: 15,
-    marginBottom: 15,
+    borderRadius: width * 0.05,
+    paddingHorizontal: width * 0.04,
+    marginBottom: height * 0.015,
+    fontSize: width * 0.04,
   },
-  inputN: {
-    height: 50,
+  rowInputs: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  inputHalf: {
+    height: height * 0.065,
     borderColor: "#ddd",
     borderWidth: 1,
-    borderRadius: 20,
-    paddingHorizontal: 15,
-    marginBottom: 15,
-    width: "49%",
+    borderRadius: width * 0.05,
+    paddingHorizontal: width * 0.04,
+    marginBottom: height * 0.015,
+    fontSize: width * 0.04,
+    width: "48%",
   },
   submitButton: {
     backgroundColor: "#2356D5",
-    height: 50,
-    borderRadius: 20,
+    height: height * 0.065,
+    borderRadius: width * 0.05,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 15,
   },
   submitButtonText: {
     color: "#fff",
     fontWeight: "bold",
+    fontSize: width * 0.045,
   },
   orText: {
     textAlign: "center",
-    marginVertical: 20,
     color: "#666",
+    marginVertical: height * 0.02,
   },
   butSo: {
     flexDirection: "row",
-    justifyContent: "space-evenly",
+    justifyContent: "center",
   },
 });

@@ -6,17 +6,18 @@ import {
   ScrollView,
   ActivityIndicator,
   RefreshControl,
+  Alert,
 } from "react-native";
 
 import SmallCard from "../../components/ui/SmallCard";
 import MedicalReportCard from "../../components/ui/MedicalReportCard";
-import api from "../../api/api"; // api.js
+import api from "../../api/api"; // ملف api.js
 
-export default function DashboardU({navigation}) {
+export default function DashboardU({ navigation }) {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [donations, setDonations] = useState([]);
-  const [requests, setRequests] = useState([]); // ✅ requests state
+  const [requests, setRequests] = useState([]);
   const [stats, setStats] = useState({
     total: 0,
     completed: 0,
@@ -25,7 +26,6 @@ export default function DashboardU({navigation}) {
 
   const fetchDashboardData = async () => {
     try {
-      // 📌 donations + recent from dashboard API
       const res = await api.get("/api/dashboard");
 
       setStats(res.data.status);
@@ -42,7 +42,6 @@ export default function DashboardU({navigation}) {
         inProgress,
       });
 
-      // 📌 requests from another API (association requests)
       const req = await api.get("/api/donation-requests");
       setRequests(req.data.data || []);
 
@@ -65,6 +64,56 @@ export default function DashboardU({navigation}) {
   useEffect(() => {
     fetchDashboardData();
   }, []);
+
+  // ✅ زرار Accept Donation
+  const handleAcceptDonation = async (id) => {
+    try {
+      await api.put(`/api/donations/${id}/change-status`, { status: "مكتمل" });
+      Alert.alert("Success", "Donation status updated to مكتمل");
+      fetchDashboardData();
+    } catch (error) {
+      console.log(error.response?.data || error.message);
+      Alert.alert("Error", "Failed to update donation");
+    }
+  };
+
+  // ✅ زرار Cancel Donation
+  const handleCancelDonation = async (id) => {
+    try {
+      await api.delete(`/api/donations/${id}`);
+      Alert.alert("Deleted", "Donation deleted");
+      fetchDashboardData();
+    } catch (error) {
+      console.log(error.response?.data || error.message);
+      Alert.alert("Error", "Failed to delete donation");
+    }
+  };
+
+  // ✅ زرار Accept Request
+  const handleAcceptRequest = async (id) => {
+    try {
+      await api.put(`/api/donation-requests/${id}/status`, {
+        status: "Approved", // ✅ هنا لازم تبعته Approved مش Received
+      });
+      Alert.alert("Success", "Request status updated to Approved");
+      fetchDashboardData();
+    } catch (error) {
+      console.log(error.response?.data || error.message);
+      Alert.alert("Error", "Failed to update request");
+    }
+  };
+
+  // ✅ زرار Cancel Request
+  const handleCancelRequest = async (id) => {
+    try {
+      await api.delete(`/api/donation-requests/${id}`);
+      Alert.alert("Deleted", "Request deleted");
+      fetchDashboardData();
+    } catch (error) {
+      console.log(error.response?.data || error.message);
+      Alert.alert("Error", "Failed to delete request");
+    }
+  };
 
   if (loading) {
     return (
@@ -119,12 +168,18 @@ export default function DashboardU({navigation}) {
               title={item.title}
               date={item.created_at}
               status={item.status}
-              onPressDetails={() => navigation.navigate("DonationDetails", { id: item.id })}
+              onPressDetails={() =>
+                navigation.navigate("DonationDetails", { id: item.id })
+              }
+              onAcceptance={() => handleAcceptDonation(item.id)}
+              onCancel={() => handleCancelDonation(item.id)}
+              but1={true}
+              but2={false}
+              but3={true}
             />
           ))
         )}
       </View>
-
 
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
@@ -140,7 +195,14 @@ export default function DashboardU({navigation}) {
               title={item.type}
               date={item.condition}
               status={item.status}
-              onPressDetails={() => navigation.navigate("DonationRequestsDetails", { id: item.id })}
+              onPressDetails={() =>
+                navigation.navigate("DonationRequestsDetails", { id: item.id })
+              }
+              onAcceptance={() => handleAcceptRequest(item.id)}
+              onCancel={() => handleCancelRequest(item.id)}
+              but1={true}
+              but2={true}
+              but3={false}
             />
           ))
         )}
